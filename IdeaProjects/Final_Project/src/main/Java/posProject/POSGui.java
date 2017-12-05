@@ -116,6 +116,75 @@ public class POSGui extends JFrame implements WindowListener {
             }
         });
 
+        typeComboBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                String type = String.valueOf(typeComboBox.getSelectedItem()).trim();
+                DefaultComboBoxModel drinkModel = new DefaultComboBoxModel(new String[]{"Select Subtype", "Cocktail", "Bottle Beer", "Draft Beer", "Wine", "N/A"});
+                DefaultComboBoxModel foodModel = new DefaultComboBoxModel(new String[]{"Select Subtype", "Entree", "Appetizer", "Dessert", "Soup", "Side", "Misc", "Special", "Salad"});
+                DefaultComboBoxModel merchModel = new DefaultComboBoxModel(new String[]{"Select Subtype", "Clothing", "Misc", "Gift Card", "Glassware"});
+                switch (type) {
+                    case "Food":
+                        subtypeComboBox.setModel(foodModel);
+                        break;
+                    case "Drink":
+                        subtypeComboBox.setModel(drinkModel);
+                        break;
+                    case "Merchandise":
+                        subtypeComboBox.setModel(merchModel);
+                        break;
+                    default:
+                        subtypeComboBox.setModel(new DefaultComboBoxModel());
+                        break;
+                }
+            }
+        });
+
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addItem.setEnabled(true);
+                POSTabbedPane.removeTabAt(POSTabbedPane.getTabPlacement());
+            }
+        });
+
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = getNameTextField.getText();
+                String price = getPriceTextField.getText();
+                String type = String.valueOf(typeComboBox.getSelectedItem()).trim();
+                String subType = String.valueOf(subtypeComboBox.getSelectedItem()).trim();
+
+                boolean validation = addInputValidation(name, price, type, subType);
+
+                if (validation) {
+                    try {
+                        double convertPrice = Double.parseDouble(price);
+
+                        switch (type) {
+                            case "Food":
+                                newFoodModel.addProduct(name, convertPrice, subType);
+                                break;
+                            case "Drink":
+                                newDrinkModel.addProduct(name, convertPrice, subType);
+                                break;
+                            case "Merchandise":
+                                newMerchandiseModel.addProduct(name, convertPrice, subType);
+                                break;
+                            default:
+                                break;
+                        }
+                        POSTabbedPane.setEnabledAt(1, true);
+                        POSTabbedPane.setSelectedIndex(0);
+                        POSTabbedPane.removeTabAt(POSTabbedPane.getTabPlacement());
+                    } catch (NumberFormatException nfee) {
+                        showMessageDialog("Please enter in a valid number for the products price");
+                    }
+                }
+            }
+        });
+
         //Switches database result sets
         viewComboBox.addItemListener(new ItemListener() {
             @Override
@@ -229,74 +298,6 @@ public class POSGui extends JFrame implements WindowListener {
         typeComboBox.setModel(defaultComboBoxModel);
         typeComboBox.setSelectedIndex(0);
 
-        typeComboBox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                String type = String.valueOf(typeComboBox.getSelectedItem()).trim();
-                DefaultComboBoxModel drinkModel = new DefaultComboBoxModel(new String[]{"Select Subtype", "Cocktail", "Bottle Beer", "Draft Beer", "Wine", "N/A"});
-                DefaultComboBoxModel foodModel = new DefaultComboBoxModel(new String[]{"Select Subtype", "Entree", "Appetizer", "Dessert", "Soup", "Side", "Misc", "Special", "Salad"});
-                DefaultComboBoxModel merchModel = new DefaultComboBoxModel(new String[]{"Select Subtype", "Clothing", "Misc", "Gift Card", "Glassware"});
-                switch (type) {
-                    case "Food":
-                        subtypeComboBox.setModel(foodModel);
-                        break;
-                    case "Drink":
-                        subtypeComboBox.setModel(drinkModel);
-                        break;
-                    case "Merchandise":
-                        subtypeComboBox.setModel(merchModel);
-                        break;
-                    default:
-                        subtypeComboBox.setModel(new DefaultComboBoxModel());
-                        break;
-                }
-            }
-        });
-
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addItem.setEnabled(true);
-                POSTabbedPane.removeTabAt(POSTabbedPane.getTabPlacement());
-            }
-        });
-
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String name = getNameTextField.getText();
-                String price = getPriceTextField.getText();
-                String type = String.valueOf(typeComboBox.getSelectedItem()).trim();
-                String subType = String.valueOf(subtypeComboBox.getSelectedItem()).trim();
-
-                boolean validation = addInputValidation(name, price, type, subType);
-
-                if (validation) {
-                    try {
-                        double convertPrice = Double.parseDouble(price);
-
-                        switch (type) {
-                            case "Food":
-                                newFoodModel.addProduct(name, convertPrice, subType);
-                                break;
-                            case "Drink":
-                                newDrinkModel.addProduct(name, convertPrice, subType);
-                                break;
-                            case "Merchandise":
-                                newMerchandiseModel.addProduct(name, convertPrice, subType);
-                                break;
-                            default:
-                                break;
-                        }
-                        POSTabbedPane.setEnabledAt(1, true);
-                        POSTabbedPane.setSelectedIndex(0);
-                        POSTabbedPane.removeTabAt(POSTabbedPane.getTabPlacement());
-                    } catch (NumberFormatException nfee) {
-                        showMessageDialog("Please enter in a valid number for the products price");
-                    }
-                }
-            }
-        });
     }
     private boolean addInputValidation(String name, String price, String type, String subtype) {
         if (name == null || name.isEmpty()) {
