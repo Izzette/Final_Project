@@ -25,10 +25,10 @@ class POS {
 
     public static void start() {
         try {
-            resultSetDefault = DBConfig.setup("default_table");
-            resultSetFood = DBConfig.setup("food");
-            resultSetDrinks = DBConfig.setup("drinks");
-            resultSetMerchandise = DBConfig.setup("merchandise");
+            resultSetDefault = DBConfig.setup(DBConfig.DEFAULT_TABLE_NAME);
+            resultSetFood = DBConfig.setup(DBConfig.FOOD_TABLE_NAME);
+            resultSetDrinks = DBConfig.setup(DBConfig.DRINK_TABLE_NAME);
+            resultSetMerchandise = DBConfig.setup(DBConfig.MERCHANDISE_TABLE_NAME);
 
             posModelDefault = new POSModel(resultSetDefault);
             posModelFood = new POSModel(resultSetFood);
@@ -38,8 +38,7 @@ class POS {
             posGui = new POSGui(posModelDefault, posModelFood, posModelDrinks, posModelMerchandise);
 
         } catch (SQLException sqlee) {
-            DBConfig.shutdown();
-            System.exit(-1);
+            sqlee.getErrorCode();
         }
     }
 

@@ -13,6 +13,7 @@ public class DBConfig {
     private static Statement st = null;
     private static Connection con = null;
     private static ResultSet rs = null;
+    private static PreparedStatement ps = null;
 
     //Table names
     final static String DRINK_TABLE_NAME = "Drinks";
@@ -64,6 +65,15 @@ public class DBConfig {
     static void startUpData() throws SQLException {
 
         //Creates tables if they don't already exist
+       /*String prepStatInsert = "CREATE TABLE IF NOT EXISTS ? ( ? int NOT NULL AUTO_INCREMENT, ? varchar(50), ? double, ? varchar(11), PRIMARY KEY(?))";
+        ps.setString(1, DRINK_TABLE_NAME);
+        ps.setString(2, PK_COLUMN);
+        ps.setString(3, PRODUCT_NAME_COLUMN);
+        ps.setString(4, PRICE_COLUMN);
+        ps.setString(5, TYPE_COLUMN);
+        ps.setString(6, PK_COLUMN);
+        ps.executeUpdate(prepStatInsert);*/
+
         String createTableSQL = "CREATE TABLE IF NOT EXISTS " + DRINK_TABLE_NAME + " (" + PK_COLUMN +
                 " int NOT NULL AUTO_INCREMENT, " + PRODUCT_NAME_COLUMN + " varchar(50), " + PRICE_COLUMN + " double, "
                 + TYPE_COLUMN + " varchar(11), PRIMARY KEY(" + PK_COLUMN + "))";
